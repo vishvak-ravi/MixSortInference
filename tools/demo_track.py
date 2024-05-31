@@ -11,7 +11,7 @@ from yolox.data.data_augment import preproc
 from yolox.exp import get_exp
 from yolox.utils import fuse_model, get_model_info, postprocess
 from yolox.utils.visualize import plot_tracking
-from yolox.tracker.byte_tracker import BYTETracker
+from yolox.byte_tracker.byte_tracker import BYTETracker
 from yolox.tracking_utils.timer import Timer
 
 
@@ -21,7 +21,7 @@ IMAGE_EXT = [".jpg", ".jpeg", ".webp", ".bmp", ".png"]
 def make_parser():
     parser = argparse.ArgumentParser("ByteTrack Demo!")
     parser.add_argument(
-        "demo", default="image", help="demo type, eg. image, video and webcam"
+        "demo", default="video", help="demo type, eg. image, video and webcam"
     )
     parser.add_argument("-expn", "--experiment-name", type=str, default=None)
     parser.add_argument("-n", "--name", type=str, default=None, help="model name")
@@ -302,11 +302,11 @@ def main(exp, args):
     if not args.experiment_name:
         args.experiment_name = exp.exp_name
 
-    output_dir = osp.join(exp.output_dir, args.experiment_name)
+    output_dir = osp.join(exp.output_dir, args.experiment_name) #expn determines output dir
     os.makedirs(output_dir, exist_ok=True)
 
     if args.save_result:
-        vis_folder = osp.join(output_dir, "track_vis")
+        vis_folder = osp.join(output_dir, "track_vis") #same thing here
         os.makedirs(vis_folder, exist_ok=True)
 
     if args.trt:
@@ -321,7 +321,6 @@ def main(exp, args):
         exp.nmsthre = args.nms
     if args.tsize is not None:
         exp.test_size = (args.tsize, args.tsize)
-
     model = exp.get_model().to(args.device)
     logger.info("Model Summary: {}".format(get_model_info(model, exp.test_size)))
     model.eval()
