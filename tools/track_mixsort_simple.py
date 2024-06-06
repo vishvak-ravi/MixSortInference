@@ -171,7 +171,8 @@ def main(exp, args, num_gpu):
     model = exp.get_model()
     logger.info("Model Summary: {}".format(get_model_info(model, exp.test_size)))
     #logger.info("Model Structure:\n{}".format(str(model)))
-
+    
+    #new exp file with simple inference loader (may make changes based on errors)
     val_loader = exp.get_eval_loader(args.batch_size, is_distributed, args.test, return_origin_img=True)
     
     evaluator = MOTEvaluator(
@@ -239,6 +240,8 @@ if __name__ == "__main__":
         args.experiment_name = exp.exp_name
 
     num_gpu = torch.cuda.device_count() if args.devices is None else args.devices
+    print(torch.cuda.is_available())
+    print(num_gpu, torch.cuda.device_count())
     assert num_gpu <= torch.cuda.device_count()
 
     launch(

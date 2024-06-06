@@ -2,6 +2,8 @@ from collections import defaultdict
 from loguru import logger
 from tqdm import tqdm
 
+import cv2
+
 import torch
 
 from yolox.utils import (
@@ -294,7 +296,9 @@ class MOTEvaluator:
         
         # TODO half to amp_test
         tensor_type = torch.cuda.HalfTensor if half else torch.cuda.FloatTensor
+        
         model = model.eval()
+
         if half:
             model = model.half()
         ids = []
@@ -302,11 +306,11 @@ class MOTEvaluator:
         results = []
         video_names = defaultdict()
         progress_bar = tqdm if is_main_process() else iter
-
+        
         inference_time = 0
         track_time = 0
         n_samples = len(self.dataloader) - 1
-
+        
         if trt_file is not None:
             from torch2trt import TRTModule
 
@@ -316,9 +320,18 @@ class MOTEvaluator:
             x = torch.ones(1, 3, test_size[0], test_size[1]).cuda()
             model(x)
             model = model_trt
-            
+        
         tracker = MIXTracker(self.args)
         ori_thresh = self.args.track_thresh
+        
+        ##to create picture
+        ##TODO save path and fps determination
+        # save_path = 
+        # fps = 
+        # vid_writer = cv2.VideoWriter(
+        #     save_path, cv2.VideoWriter_fourcc(*"mp4v"), fps, (int(width), int(height))
+        # )
+        
         for cur_iter, (origin_imgs, imgs, _, info_imgs, ids) in enumerate(
             progress_bar(self.dataloader)
         ):
@@ -386,6 +399,8 @@ class MOTEvaluator:
                 track_time += track_end - infer_end
             
             if cur_iter == len(self.dataloader) - 1:
+                # timer.toc() ## what is this
+                # online_im = plot_tracking(img_info)
                 result_filename = os.path.join(result_folder, '{}.txt'.format(video_names[video_id]))
                 write_results(result_filename, results)
 
@@ -398,6 +413,7 @@ class MOTEvaluator:
         eval_results = self.evaluate_prediction(data_list, statistics)
         synchronize()
         return eval_results
+        return
 
     def evaluate_mixsort_oc(
         self,

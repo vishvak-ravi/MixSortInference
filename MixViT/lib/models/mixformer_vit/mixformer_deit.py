@@ -132,6 +132,8 @@ class VisionTransformer(timm.models.vision_transformer.VisionTransformer):
                                                 drop_rate=drop_rate, attn_drop_rate=attn_drop_rate,
                                                 drop_path_rate=drop_path_rate, weight_init=weight_init,
                                                 norm_layer=norm_layer, act_layer=act_layer)
+        
+        
 
         self.patch_embed = embed_layer(
             patch_size=patch_size, in_chans=in_chans, embed_dim=embed_dim)
@@ -148,9 +150,10 @@ class VisionTransformer(timm.models.vision_transformer.VisionTransformer):
         self.pos_embed_t = nn.Parameter(torch.zeros(1, self.num_patches_t, embed_dim), requires_grad=False)
 
         self.initialize_pos_weights()
-
+        
         if weight_init != 'skip':
             self.init_weights(weight_init)
+            
 
     def initialize_pos_weights(self):
         # initialization
@@ -158,7 +161,6 @@ class VisionTransformer(timm.models.vision_transformer.VisionTransformer):
         pos_embed_t = get_2d_sincos_pos_embed(self.pos_embed_t.shape[-1], int(self.num_patches_t ** .5),
                                             cls_token=False)
         self.pos_embed_t.data.copy_(torch.from_numpy(pos_embed_t).float().unsqueeze(0))
-
         pos_embed_s = get_2d_sincos_pos_embed(self.pos_embed_s.shape[-1], int(self.num_patches_s ** .5),
                                               cls_token=False)
         self.pos_embed_s.data.copy_(torch.from_numpy(pos_embed_s).float().unsqueeze(0))
@@ -197,6 +199,7 @@ class VisionTransformer(timm.models.vision_transformer.VisionTransformer):
 def get_mixformer_vit(config):
     img_size_s = config.DATA.SEARCH.SIZE
     img_size_t = config.DATA.TEMPLATE.SIZE
+    
     if config.MODEL.VIT_TYPE == 'large_patch16':
         vit = VisionTransformer(
             img_size_s=img_size_s, img_size_t=img_size_t,
@@ -271,6 +274,7 @@ class MixFormer(nn.Module):
 def build_mixformer_deit(cfg):
     backbone = get_mixformer_vit(cfg)  # backbone without positional encoding and attention mask
     box_head = build_box_head(cfg)  # a simple corner head
+    
     model = MixFormer(
         backbone,
         box_head,

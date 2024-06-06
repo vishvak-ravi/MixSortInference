@@ -15,10 +15,10 @@ import json
 import cv2
 from tqdm import tqdm
 
-DATA_PATH = "datasets/SportsMOT"
+DATA_PATH = "datasets/sample_mot/dataset"
 OUT_PATH = os.path.join(DATA_PATH, "annotations")
-os.makedirs(OUT_PATH)
-SPLITS = ["train", "val", "test"]
+os.makedirs(OUT_PATH, exist_ok=True)
+SPLITS = ["train"]
 HALF_VIDEO = False
 CREATE_SPLITTED_ANN = True
 USE_DET = False
