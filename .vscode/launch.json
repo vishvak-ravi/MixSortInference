@@ -7,8 +7,8 @@
             "request": "launch",
             "program": "${workspaceFolder}/tools/track_mixsort_simple.py",
             "args": [
-                "-expn", "yolox_x_inference",
-                "-f", "exps/example/mot/yolox_x_inference.py",
+                "-expn", "yolox_x_sample_test",
+                "-f", "exps/example/mot/yolox_x_sample_test.py",
                 "-c", "pretrained/yolox_x_sports_mix.pth.tar",
                 "-b", "1",
                 "-d", "1",

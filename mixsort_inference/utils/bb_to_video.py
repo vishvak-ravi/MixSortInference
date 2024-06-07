@@ -1,10 +1,11 @@
 import cv2
 import os
 import numpy as np
-import parser
+import argparse
 
-def make_parser():
-    
+BOUNDING_BOX_FILE_PATH = "YOLOX_outputs/yolox_x_sample_test/track_results/v_100.txt"
+FRAME_DIR = "datasets/sample_coco_test/val/v_100/img1"
+FRAME_RATE = 30  # if using the same nba data, it's probably this, but double check if the video input length != output length
 
 # Define a function to generate a unique color for each ID
 def get_color(id):
@@ -12,19 +13,11 @@ def get_color(id):
     return tuple(np.random.randint(0, 255, 3).tolist())
 
 # Load bounding box data
-bounding_boxes = np.loadtxt()
-
-bounding_boxes = [
-    "61,1,855.6,355.0,95.0,137.5,0.9700000286102295,-1,-1,-1",
-    "61,2,943.6,316.2,80.5,92.6,0.9599999785423279,-1,-1,-1",
-    "61,3,384.4,379.3,55.0,148.9,0.9599999785423279,-1,-1,-1",
-    # Add more bounding box data here...
-]
+bounding_boxes = np.loadtxt(BOUNDING_BOX_FILE_PATH, delimiter=',')
 
 # Parse bounding box data
 parsed_bboxes = []
-for line in bounding_boxes:
-    parts = line.strip().split(',')
+for parts in bounding_boxes:
     frame = int(parts[0])
     id = int(parts[1])
     bb_left = float(parts[2])
@@ -34,18 +27,18 @@ for line in bounding_boxes:
     parsed_bboxes.append((frame, id, bb_left, bb_top, bb_width, bb_height))
 
 # Directory containing frames
-frame_dir = "path/to/frames"
+frame_dir = FRAME_DIR
 
-# Output video file
-output_video = "output_video.avi"
+# Output video file path (same directory as BOUNDING_BOX_FILE_PATH)
+output_video = os.path.join(os.path.dirname(BOUNDING_BOX_FILE_PATH), "output_video.mp4")
 
 # Get frame size
-frame_sample = cv2.imread(os.path.join(frame_dir, "0001.jpg"))
+frame_sample = cv2.imread(os.path.join(frame_dir, "000001.jpg"))
 height, width, layers = frame_sample.shape
 
 # Define the codec and create VideoWriter object
-fourcc = cv2.VideoWriter_fourcc(*'XVID')
-out = cv2.VideoWriter(output_video, fourcc, 20.0, (width, height))
+fourcc = cv2.VideoWriter_fourcc(*'mp4v')
+out = cv2.VideoWriter(output_video, fourcc, FRAME_RATE, (width, height))
 
 # Process frames
 frame_files = sorted([f for f in os.listdir(frame_dir) if f.endswith('.jpg')])
@@ -62,7 +55,7 @@ for bbox in parsed_bboxes:
 # Read each frame and draw bounding boxes
 for i, frame_file in enumerate(frame_files):
     frame = cv2.imread(frame_file)
-    frame_index = i + 1
+    frame_index = i + 1  # since count starts at 1
 
     if frame_index in bboxes_by_frame:
         for bbox in bboxes_by_frame[frame_index]:
@@ -79,4 +72,4 @@ for i, frame_file in enumerate(frame_files):
 out.release()
 cv2.destroyAllWindows()
 
-print("Video has been rendered successfully.")
+print(f"Video has been rendered successfully and saved to {output_video}.")

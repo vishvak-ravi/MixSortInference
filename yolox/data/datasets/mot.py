@@ -38,6 +38,7 @@ class MOTDataset(Dataset):
         self.data_dir = data_dir
         self.json_file = json_file
         self.coco = COCO(os.path.join(self.data_dir, "annotations", self.json_file))
+        print('loaded annotations')
         self.ids = self.coco.getImgIds()
         self.class_ids = sorted(self.coco.getCatIds())
         cats = self.coco.loadCats(self.coco.getCatIds())
