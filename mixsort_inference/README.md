@@ -1,4 +1,6 @@
 # Steps to run inference on MixSort with a single video (6/7/2024)
+## Environment set up
+1. Follow directions on MixSort repo for environment set up. Ensure you're using numpy>=1.2.* for MixSort inference to work. The vast majority of troubleshooting was straightforward versioning that didn't require too much detective work. It's still tricky, so hit me up if there's an issue you've been dealing with for a while.
 ## Data preprocessing
 Note: Feel free to ignore the creation of a
 0. Clip video optionally using ```clip.py``` util in ```mixsort_inference/utils/```
