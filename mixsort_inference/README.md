@@ -2,7 +2,7 @@
 ## Environment set up
 1. Follow directions on MixSort repo for environment set up. Ensure you're using numpy>=1.2.* for MixSort inference to work. The vast majority of troubleshooting was straightforward versioning that didn't require too much detective work. It's still tricky, so hit me up if there's an issue you've been dealing with for a while.
 ## Data preprocessing
-Note: Feel free to ignore the creation of a
+
 0. Clip video optionally using ```clip.py``` util in ```mixsort_inference/utils/```
 1. Create a copy of ```datasets/sample_mot``` such as ```datasets/{your_video_name}_mot```. Also, create a COCO format dataset by making a copy of ```datasets/sample_coco``` such as ```datasets/{your_video_name}_coco```. 
 2. Split input video into frames using ```mixsort_inference/utils/video_to_frames.py``` and ensure the destination is ```datasets/{your_video_name}_mot/dataset/train/v_100/img1/```.
