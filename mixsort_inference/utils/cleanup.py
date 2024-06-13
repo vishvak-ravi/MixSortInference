@@ -1,7 +1,7 @@
 import shutil
 import os
 
-def inference_cleanup(experiment_name):
+def inference_cleanup(experiment_name, video_folder):
     mot_name = experiment_name + "_mot"
     coco_name = experiment_name + "_coco"
     base_dir = 'datasets/'
@@ -27,6 +27,15 @@ def inference_cleanup(experiment_name):
         print(f"Successfully deleted the file: {exp_file_name}")
     else:
         print(f"The file does not exist: {exp_file_name}")
+        
+    source_dir = f"YOLOX_outputs/yolox_x_{coco_name}/"
+    target_dir = os.path.join(video_folder, experiment_name)
+        
+    if os.path.exists(source_dir) and os.path.isdir(source_dir):
+        shutil.move(source_dir, target_dir)
+        print(f"Successfully moved the directory: {source_dir} to {target_dir}")
+    else:
+        print(f"The directory does not exist: {source_dir}")
     
 # Example usage
 #delete_experiment_directory('yolox_x_sample_test')

@@ -100,7 +100,7 @@ def inference(video_folder, experiment_name):
     # argument for the next two functions should be the same as the coco folder name in datasets/ that you created
     create_exp(coco_name) #creates an exp file that determines how COCO processes (dataset-specific)
     run_inference(coco_name) #uses newly created exp file (which contains COCO dataset) to run inference
-    inference_cleanup(experiment_name)
+    inference_cleanup(experiment_name, video_folder)
     return
 
 if __name__ == "__main__":
