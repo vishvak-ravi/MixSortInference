@@ -19,7 +19,7 @@ class Exp(MyExp):
         self.width = 1.25
         self.exp_name = os.path.split(os.path.realpath(__file__))[1].split(".")[0]
         self.train_ann = "mix.json"
-        self.val_ann = "val.json"   # change to train.json when running on training set
+        self.val_ann = "annotations.json"   # change to train.json when running on training set
         self.input_size = (800, 1440)
         self.test_size = (800, 1440)
         self.random_size = (18, 32)
@@ -99,7 +99,7 @@ class Exp(MyExp):
 
         valdataset = MOTDataset(
             data_dir=os.path.join(get_yolox_datadir(), "{dataset}"),
-            json_file=self.val_ann,
+            json_file="annotations.json",
             img_size=self.test_size,
             name='val', # change to train when running on training set
             preproc=ValTransform(
@@ -145,6 +145,8 @@ class Exp(MyExp):
 def create_exp(dataset):
     content = template.replace("{dataset}", dataset)
     filename = f"yolox_x_{dataset}.py"
+    exp_path = "exps/example/mot/"
+    filename = os.path.join(exp_path, filename)
     with open(filename, 'w') as file:
         file.write(content)
     print(f"File '{filename}' created successfully.")

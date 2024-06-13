@@ -5,6 +5,7 @@ import shutil
 from convert_sportsmot_to_coco import convert_mot_to_coco
 from create_exp import create_exp
 from run_mixsort_oc import run_inference
+from cleanup import inference_cleanup
 
 def create_mot_dataset(video_folder, output_folder, frame_rate=None):
     # Create the necessary folders
@@ -57,7 +58,7 @@ def create_mot_dataset(video_folder, output_folder, frame_rate=None):
                 seqinfo_file.write(f'imHeight={height}\n')
                 seqinfo_file.write(f'imExt=.jpg\n')
             
-            frame_idx = 0
+            frame_idx = 1
             while cap.isOpened():
                 ret, frame = cap.read()
                 if not ret:
@@ -87,12 +88,22 @@ def create_coco_from_mot(mot_output_folder, coco_output_folder):
     coco_dataset_folder = os.path.join(coco_output_folder, 'val')
     shutil.copytree(mot_dataset_folder, coco_dataset_folder, dirs_exist_ok=True)
 
-if __name__ == "__main__":
-    video_folder = '/mnt/opr/vishravi/player-reidentification/sample-videos/clips/'  # Replace with the path to your input folder of videos
-    mot_output_folder = '/mnt/opr/vishravi/player-reidentification/MixSort/datasets/sample_multi_mot_auto/'  # Replace with the path to your desired MOT output folder
-    coco_output_folder = '/mnt/opr/vishravi/player-reidentification/MixSort/datasets/sample_multi_coco_auto/'  # Replace with the path to your desired COCO output folder
+def inference(video_folder, experiment_name):
+    #video_folder = '/mnt/opr/vishravi/player-reidentification/sample-videos/clips/'  # Replace with the path to your input folder of videos
+    #experiment_name = 'here_we_go'
+    coco_name = experiment_name + "_coco"
+    mot_output_folder = f'datasets/{experiment_name}_mot/'  # Replace with the path to your desired MOT output folder
+    coco_output_folder = f'datasets/{coco_name}/'  # Replace with the path to your desired COCO output folder
     
     create_mot_dataset(video_folder, mot_output_folder)
     create_coco_from_mot(mot_output_folder, coco_output_folder)
-    create_exp("sample_multi_coco_auto")
-    run_inference("sample_multi_coco_auto")
+    # argument for the next two functions should be the same as the coco folder name in datasets/ that you created
+    create_exp(coco_name) #creates an exp file that determines how COCO processes (dataset-specific)
+    run_inference(coco_name) #uses newly created exp file (which contains COCO dataset) to run inference
+    inference_cleanup(experiment_name)
+    return
+
+if __name__ == "__main__":
+    video_folder = '/mnt/opr/vishravi/player-reidentification/sample-videos/clips/'  # Replace with the path to your input folder of videos
+    experiment_name = 'here_we_go'
+    inference(video_folder, experiment_name)

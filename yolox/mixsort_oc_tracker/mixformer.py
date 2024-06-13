@@ -53,7 +53,7 @@ class MixFormer:
             Union[Tuple[torch.Tensor,torch.Tensor],torch.Tensor]: transfromed image (and boxes)
         """
         # compute params
-        center = torch.from_numpy(center[:4].astype(np.int))
+        center = torch.from_numpy(center[:4].astype(int))
         search_area_factor = self.settings.search_area_factor[s]
         output_sz = self.settings.output_sz[s]
         x, y, w, h = [int(i) for i in center]

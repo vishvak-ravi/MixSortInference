@@ -5,10 +5,10 @@
             "name": "Python: Track MixSort Simple",
             "type": "debugpy",
             "request": "launch",
-            "program": "${workspaceFolder}/tools/track_mixsort_simple.py",
+            "program": "${workspaceFolder}/tools/track_mixsort_oc_simple.py",
             "args": [
-                "-expn", "yolox_x_sample_test",
-                "-f", "exps/example/mot/yolox_x_sample_test.py",
+                "-expn", "yolox_x_here_we_go",
+                "-f", "exps/example/mot/yolox_x_here_we_go.py",
                 "-c", "pretrained/yolox_x_sports_mix.pth.tar",
                 "-b", "1",
                 "-d", "1",
